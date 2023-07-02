@@ -36,11 +36,6 @@ jobs:
           git config --global user.name "${{github.actor}}"
           git config --global user.email "${{github.actor}}@users.noreply.github.com"
 
-      - name: Add remote origin
-        run: |
-          cd extracted_folder
-          git remote add origin "https://github.com/${{github.repository}}"
-
       - name: Commit and push extracted folder
         run: |
           cd extracted_folder

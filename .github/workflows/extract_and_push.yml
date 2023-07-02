@@ -42,7 +42,7 @@ jobs:
           git init
           git add .
           git commit -m "Update via GitHub Actions"
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}/tree/main/IntegrationArtifacts" HEAD:main
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}/tree/main/IntegrationArtifacts" HEAD:main
 
       - name: Delete extracted folder
         run: rm -rf extracted_folder

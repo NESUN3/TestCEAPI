@@ -19,13 +19,13 @@ jobs:
 
       - name: Check for zip file
         run: |
-           if [ -f "${{github.event.repository.name}}.zip" ]; then
-             echo "*****Zip file found: ${{github.event.repository.name}}.zip*****"
-           else
-             echo "*****Zip file not found*****"
-             exit 1
-           fi
-          
+          if [ -f "${{github.event.repository.name}}.zip" ]; then
+            echo "*****Zip file found: ${{github.event.repository.name}}.zip*****"
+          else
+            echo "*****Zip file not found*****"
+            exit 1
+          fi
+
       - name: Extract zip file
         run: |
           echo "*****Extracting zip file*****"
@@ -42,7 +42,8 @@ jobs:
           git init
           git add .
           git commit -m "Update via GitHub Actions"
-          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:main
+          git pull --rebase origin main
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:main
 
       - name: Delete extracted folder
         run: rm -rf extracted_folder

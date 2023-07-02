@@ -36,6 +36,11 @@ jobs:
           git config --global user.name "${{github.actor}}"
           git config --global user.email "${{github.actor}}@users.noreply.github.com"
 
+      - name: Add remote origin
+        run: |
+          cd extracted_folder
+          git remote add origin "https://github.com/${{github.repository}}"
+
       - name: Commit and push extracted folder
         run: |
           cd extracted_folder
@@ -43,7 +48,7 @@ jobs:
           git add .
           git commit -m "Update via GitHub Actions"
           git pull --rebase origin main
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:main
+          git push --force origin HEAD:main
 
       - name: Delete extracted folder
         run: rm -rf extracted_folder

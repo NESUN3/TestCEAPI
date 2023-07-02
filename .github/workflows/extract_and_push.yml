@@ -1,0 +1,55 @@
+name: Extract and Push Zip
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  extract_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Delete existing extracted folder
+        run: rm -rf extracted_folder
+
+      - name: Check for zip file
+        run: |
+           if [ -f "${{github.event.repository.name}}.zip" ]; then
+             echo "*****Zip file found: ${{github.event.repository.name}}.zip*****"
+           else
+             echo "*****Zip file not found*****"
+             exit 1
+           fi
+          
+      - name: Extract zip file
+        run: |
+          echo "*****Extracting zip file*****"
+          unzip "${{github.event.repository.name}}.zip" -d extracted_folder
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{github.actor}}"
+          git config --global user.email "${{github.actor}}@users.noreply.github.com"
+
+      - name: Commit and push extracted folder
+        run: |
+          cd extracted_folder
+          git init
+          git add .
+          git commit -m "Update via GitHub Actions"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}/IntegrationArtifacts" HEAD:main
+
+      - name: Delete extracted folder
+        run: rm -rf extracted_folder
+
+  manual_run:
+    needs: extract_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manual Action Step
+        run: echo "This is a manual action run."
